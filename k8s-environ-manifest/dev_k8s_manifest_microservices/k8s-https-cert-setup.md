@@ -4,13 +4,13 @@ This document describes how to secure a custom domain (`dev.charlesabe.com`) usi
 
 ---
 
-## 1. Install cert-manager
+# 1. Install cert-manager
 
 ```bash
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
 
 
------------ 2 Create AWS Credentials Secret
+----------- #2 Create AWS Credentials Secret
 
 apiVersion: v1
 kind: Secret
@@ -23,7 +23,7 @@ stringData:
   AWS_SECRET_ACCESS_KEY: <your-secret-key>
 
 
---------- 3 Create ClusterIssuer for Let’s Encrypt
+--------- #3 Create ClusterIssuer for Let’s Encrypt
 
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -47,26 +47,21 @@ spec:
             key: AWS_SECRET_ACCESS_KEY
 
 
------- 4 Install Ingress NGINX Controller
+------ #4 Install Ingress NGINX Controller
+
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
 
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-kubectl create namespace ingress-nginx
+
 helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \
-  --set controller.publishService.enabled=true
+  --create-namespace
 
 
----------- 5. Point Route 53 to Ingress Load Balancer
-
-In AWS Route 53:
-
-Create A/ALIAS record for dev.charlesabe.com
-
-Target → ELB DNS from kubectl get svc -n ingress-nginx
-
-
---------6. Create Ingress with TLS and Auto Certificate
+   # 5. create ingress.yaml 
+#Create Ingress with TLS and Auto Certificate
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -95,7 +90,27 @@ spec:
               number: 80
 
 
----------7. Verify HTTPS
+  5 kubectl apply -f .
+
+  6 # to get the svc ingress loadbalancer#
+  kubectl get svc -n ingress-nginx
+
+
+  #ensure you delete the old loadbalancer, created initially using
+kubectl delete svc frontend-external -n default
+
+
+
+
+---------- 5. Point Route 53 to Ingress Load Balancer
+
+In AWS Route 53:
+
+Create A/ALIAS record for dev.charlesabe.com
+
+# 7 Target → ELB DNS from kubectl get svc -n ingress-nginx and replace it with the existing loadbalncer in A-record of route 53#
+
+---------8. Verify HTTPS
 curl -v https://dev.charlesabe.com
 
 Or test on SSL Labs
