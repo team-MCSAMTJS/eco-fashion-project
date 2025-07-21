@@ -1,3 +1,6 @@
+#argocd ssl hosting on secured DnS#
+#TO run after hosting DnS IS secured#
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

@@ -1,6 +1,6 @@
 # 🔐 Kubernetes HTTPS Setup with Cert-Manager and Let's Encrypt (Route 53 DNS)
 
-This document describes how to secure a custom domain (`dev.charlesabe.com`) using **cert-manager**, **Let’s Encrypt**, and **Ingress NGINX** with DNS challenge via AWS Route 53.
+This document describes how to secure a custom domain (`dev.charlesabe.com`)  using **cert-manager**, **Let’s Encrypt**, and **Ingress NGINX** with DNS challenge via AWS Route 53.
 
 ---
 
@@ -51,7 +51,6 @@ spec:
 
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
@@ -75,10 +74,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - dev.charlesabe.com
+    - dev.charlesabe.com  #replace with your domain#
     secretName: dev-charlesabe-com-tls
   rules:
-  - host: dev.charlesabe.com
+  - host: dev.charlesabe.com   #replace with your domain#
     http:
       paths:
       - path: /
@@ -106,12 +105,12 @@ kubectl delete svc frontend-external -n default
 
 In AWS Route 53:
 
-Create A/ALIAS record for dev.charlesabe.com
+Create A/ALIAS record for dev.charlesabe.com  #replace with your domain#
 
 # 7 Target → ELB DNS from kubectl get svc -n ingress-nginx and replace it with the existing loadbalncer in A-record of route 53#
 
 ---------8. Verify HTTPS
-curl -v https://dev.charlesabe.com
+curl -v https://dev.charlesabe.com   #replace with your domain#
 
 Or test on SSL Labs
 
