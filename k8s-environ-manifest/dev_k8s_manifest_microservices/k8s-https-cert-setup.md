@@ -111,6 +111,7 @@ Create A/ALIAS record for dev.charlesabe.com  #replace with your domain#
 -------10. Verify HTTPS
 curl -v https://dev.charlesabe.com   #replace with your domain#
 
+
 Or test on SSL Labs
 
 
