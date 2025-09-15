@@ -1,0 +1,25 @@
+#create and run after argocd configuration and login#
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eco-fashion-dev
+  namespace: argocd # must match where ArgoCD is installed
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/team-MCSAMTJS/eco-fashion-project.git
+    targetRevision: main
+    path: k8s-environ-manifest/dev_k8s_manifest_microservices
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+    automated:            # Optional: Enable auto-sync
+      prune: true         # Auto-remove resources not in Git
+      selfHeal: true      # Auto-correct drift
+    syncOptions:
+      - CreateNamespace=true

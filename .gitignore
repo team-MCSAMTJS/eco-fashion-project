@@ -1,0 +1,9 @@
+.vscode-server/
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+crash.log
+*.tfplan
+awscliv2.zip
+kubectl.terraform/
+aws-secret.yaml

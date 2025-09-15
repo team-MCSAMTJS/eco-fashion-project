@@ -1,0 +1,31 @@
+#argocd ssl hosting on secured DnS#
+#TO run after hosting DnS IS secured#
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-ingress
+  namespace: argocd
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-dns
+    external-dns.alpha.kubernetes.io/hostname: dev.argocd.charlesabe.com
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - dev.argocd.charlesabe.com
+      secretName: argocd-tls
+  rules:
+    - host: dev.argocd.charlesabe.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 443
